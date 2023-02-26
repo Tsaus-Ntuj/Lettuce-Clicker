@@ -1,0 +1,209 @@
+<HTML>
+<head>
+<title>Lettuce Clicker</title>
+
+<style>
+.sectionLeft {
+float: left;
+width: 80%
+}
+.sectionRight {
+float: right;
+width: 20%
+}
+.scoreContainer {
+background-color: rgb(238, 238, 238, 0.6);
+width: 50%;
+padding: 10px;
+border-radius: 10px;
+font-size: 24px;
+font-weight: bold;
+}
+
+.clickerContainer img {
+position: relative;
+transition: all .2s ease-in-out;
+}
+
+.clickerContainer img:hover { transform: scale(1.10); }
+.clickerContainer img:active { transform: scale(0.99); }
+
+.shopButton {
+background-color: #b5b5b5;
+transition: all .2s ease-in-out;
+border-radius: 10px;
+width:100%
+margin: 10px 0px 10px 0px;
+}
+
+.shopButton:hover {
+background-color: #c7c7c7;
+transition: all .2s ease-in-out;
+}
+
+.shopButton #image {
+width: 25%;
+}
+
+.shopButton img {
+height: 64px;
+width: 64 px;
+}
+
+.shopButton #nameAndCost p {
+margin: 0px;
+width:60%;
+}
+
+.shopButton #nameAndCost p:first-of-type {
+font-size: 20px;
+}
+
+.shopButton #amount {
+font-size: 38px;
+color: #595959;
+font-family: roboto;
+width: 15%;
+}
+
+.unselectable {
+user-select: none;
+}
+</style>
+</head>
+
+<body>
+<div class="sectionLeft unselectable">
+<center>
+<div class="scoreContainer unselectable">
+<span id="lettuce">0</span> Lettuce<br>
+<span id="lettucepersecond">0</span> Lettuce Per Second
+</div>
+<br>
+<div class="clickerContainer unselectable">
+<img src="burgergame.image/lettuce.png" height="256" width="256" onClick="addToLettuces(clickingPower)">
+</div>
+<button onclick="saveGame();">Save Game</button>
+</center>
+</div>
+<div class="sectionRight unselectable">
+<table class="shopButton unselectable" onclick="buyLettucePlant()">
+<tr>
+<td id="image"><img src="burgergame.image/lettuceplant.png"></td>
+<td id="nameAndCost">
+<p>Lettuce Plant</p>
+<p><span id="lettuceplantcost">25</span> Lettuce</p>
+</td>
+<td id="amount"><span id="lettuceplant">0</span></td>
+</tr>
+</table>
+<table class="shopButton unselectable" onclick="buyFarmer()">
+<tr>
+<td id="image"><img src="burgergame.image/farmer.png"></td>
+<td id="nameAndCost">
+<p>Farmer</p>
+<p><span id="farmercost">150</span> Lettuce</p>
+</td>
+<td id="amount"><span id="farmer">0</span></td>
+</tr>
+</table>
+<table class="shopButton unselectable" onclick="buyManager()">
+<tr>
+<td id="image"><img src="burgergame.image/manager.png"></td>
+<td id="nameAndCost">
+<p>Manager</p>
+<p><span id="managercost">900</span> Lettuce</p>
+</td>
+<td id="amount"><span id="manager">0</span></td>
+</tr>
+</table>
+</div>
+
+<script>
+var lettuce = 0;
+var clickingPower = 1;
+
+var lettuceplantCost = 25;
+var lettuceplant = 0;
+var farmerCost = 150;
+var farmer = 0;
+var managerCost = 900;
+var manager = 0;
+
+function buyLettucePlant() {
+if (lettuce >= lettuceplantCost) {
+lettuce = lettuce - lettuceplantCost;
+lettuceplant = lettuceplant + 1;
+lettuceplantCost = Math.round(lettuceplantCost * 1.10);
+
+document.getElementById("lettuce").innerHTML = lettuce;
+document.getElementById("lettuceplantcost").innerHTML = lettuceplantCost;
+document.getElementById("lettuceplant").innerHTML = lettuceplant;
+updateLettucePerSecond();
+}
+}
+
+function buyFarmer() {
+if (lettuce >= farmerCost) {
+lettuce = lettuce - farmerCost;
+farmer = farmer + 1;
+farmerCost = Math.round(farmerCost * 1.10);
+
+document.getElementById("lettuce").innerHTML = lettuce;
+document.getElementById("farmercost").innerHTML = farmerCost;
+document.getElementById("farmer").innerHTML = farmer;
+updateLettucePerSecond();
+}
+}
+
+function buyManager() {
+if (lettuce >= managerCost) {
+lettuce = lettuce - managerCost;
+manager = manager + 1;
+managerCost = Math.round(managerCost * 1.10);
+
+document.getElementById("lettuce").innerHTML = lettuce;
+document.getElementById("managercost").innerHTML = managerCost;
+document.getElementById("manager").innerHTML = manager;
+updateLettucePerSecond();
+}
+}
+
+function addToLettuces(amount) {
+lettuce = lettuce + amount;
+document.getElementById("lettuce").innerHTML = lettuce;
+}
+
+function updateLettucePerSecond() {
+lettucePerSecond = lettuceplant + farmer * 5 + manager * 25;
+document.getElementById("lettucepersecond").innerHTML = lettucePerSecond
+}
+
+function saveGame() {
+var gameSave = {
+lettuce: lettuce,
+clickingPower: clickingPower,
+lettuceplantCost: lettuceplantCost,
+lettuceplant: lettuceplant,
+farmerCost: farmerCost,
+farmer: farmer,
+managerCost: managerCost,
+manager: manager
+};
+localStorage.setItem("gameSave", JSON.stringify(gameSave));
+}
+
+setInterval(function() {
+lettuce = lettuce + lettuceplant;
+lettuce = lettuce + farmer * 5;
+lettuce = lettuce + manager * 25;
+document.getElementById("lettuce").innerHTML = lettuce;
+
+document.title = lettuce + " lettuce - Lettuce Clicker";
+}, 1000); // 1000ms = 1 second
+
+setInterval(function() {
+}, 60000); //60000ms = 60 seconds
+</script>
+</body>
+</HTML>
